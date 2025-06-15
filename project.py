@@ -70,6 +70,7 @@ def main():
 
     create_initial_instructions(canvas, 200 + 3, 200 + 3)
 
+    #Buttons for reseting the pattern (i.e. it removes any coloring from the current pattern)
     reset = tk.Button(root, text="Reset", width=5, command=lambda: reset_current_pattern())
     reset.place(x=525, y=526)
 
