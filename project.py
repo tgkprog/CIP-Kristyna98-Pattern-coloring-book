@@ -19,16 +19,19 @@ current_pattern = "initial_instructions"
 
 
 def return_color(desired_color):
+    #This function changes the global variable color, this variable is later used in the main coloring function. This function is called when presing the buttons with colors and various colors are given as arguments.
     global color
     color = desired_color
 
 
 def return_coloring_line_width(desired_line_width):
+    #This function changes the global variable coloring_line_width, this variable is later used in the main coloring function.This function is called when presing the buttons with  various lines-thickness and the number of pixels is passed to ths function as an argument.
     global coloring_line_width
     coloring_line_width = desired_line_width
 
 
 def draw_pattern(pattern_number):
+    #This function at first cleans the canvas and then calles the functions that creates the patterns. This function is connected to buttons and when each of the buttons are clicked, this function is called with the appropriate argument.
     if pattern_number == 1:
         canvas.delete('all')
         create_flower_pattern(canvas, 200 + 3, 200 + 3)
@@ -42,6 +45,7 @@ def draw_pattern(pattern_number):
         create_geometry_pattern(canvas, 200 + 3, 200 + 3)
 
 def reset_current_pattern():
+    #This function at fist clears the canvas and then draws the same pattern that was there previously. We keep track of what is the current pattern through the global variable current_pattern. Each time a function that draws some pattern is called, that variable is re-written to keep it up-to-date.
     if current_pattern == "initial_instructions":
         canvas.delete('all')
         create_initial_instructions(canvas, 200 + 3, 200 + 3)
@@ -62,7 +66,7 @@ def reset_current_pattern():
 
 
 def main():
-
+    #This is the main function. At first a function that writes the initial instruction is called. Then there are defined all the buttons which are connected to the functions above (i.e. they call these function). At the end we also have the canvas.bind which is basically the main functionality that enables us to do the coloring.
 
     create_initial_instructions(canvas, 200 + 3, 200 + 3)
 
@@ -124,6 +128,7 @@ def main():
 
 
 def create_flower_pattern(canvas, starting_x, starting_y):
+    #This function draws a flower on the canvas, starting_x and starting_y are the coordinates for the canvas centre. Here we also change the global variable current pattern to keep the current pattern up-to-date so we can use the reset function.
 
     global current_pattern
     current_pattern = "flower_pattern"
@@ -149,8 +154,11 @@ def create_flower_pattern(canvas, starting_x, starting_y):
     canvas.create_oval(starting_x - 20,starting_y - 20,starting_x + 20,starting_y + 20,fill='white',width=3, outline ='black')
 
 def create_scenery_pattern(canvas, starting_x, starting_y):
+    #This function draws a scenery on the canvas, starting_x and starting_y are the coordinates for the canvas centre. Here we also change the global variable current pattern to keep the current pattern up-to-date so we can use the reset function.
+
     global current_pattern
     current_pattern = "scenery_pattern"
+    
     # house
     canvas.create_rectangle(starting_x - 80, starting_y + 40, starting_x + 80, CANVAS_HEIGHT, width=3, outline ='black')
     canvas.create_line(starting_x - 80, starting_y + 40, starting_x, starting_y - 50, width=3)
@@ -195,6 +203,8 @@ def create_scenery_pattern(canvas, starting_x, starting_y):
 
 
 def create_geometry_pattern(canvas, starting_x, starting_y):
+    #This function draws a geometrical pattern on the canvas, starting_x and starting_y are the coordinates for the canvas centre. Here we also change the global variable current pattern to keep the current pattern up-to-date so we can use the reset function.
+
     global current_pattern
     current_pattern = "geometry_pattern"
 
@@ -216,7 +226,7 @@ def create_geometry_pattern(canvas, starting_x, starting_y):
 
 
 def create_initial_instructions(canvas, starting_x, starting_y):
-    pass
+    #This function writes the initial instructions to use the program. This function is called at the beginning. Here we don't change the global variable as this is it's pre-set value and the user cannot call this function any later after letting some pattenrs to be drawn on the canvas.
 
     canvas.create_text(starting_x , starting_y - 180, text='WELCOME to the pattern coloring book!', font=('Arial, 17 bold'), fill='#7f65ad')
     canvas.create_text(starting_x, starting_y - 130, text="To start coloring please follow these steps:",font=('Arial, 16 '), fill='#7f65ad')
@@ -237,8 +247,8 @@ def create_initial_instructions(canvas, starting_x, starting_y):
 
 
 def color_pattern(canvas, x, y):
-
-    # Determine which part of the pattern corresponds to (x,y) and color it.
+    #This function is the function responsible for the coloring prosess. We do it with drwaing ovals. As the function is called repeatedly it then creates an illusion of drawing a line. Here we use the variables color and coloring_line_width.
+    
     canvas.create_oval(
         x - 1,
         y - 1,
@@ -250,6 +260,8 @@ def color_pattern(canvas, x, y):
 
 
 def on_mouse_dragged(event):
+    #This function collects the coordinates of the event that is in our case basically the mouse dragging and then it calles the coloring function eith these coordinates. This function is being repeatedly called when the mouse is being pressed via the 'canvas.bind("<B1-Motion>", on_mouse_dragged)' which we have in the main function.
+    
     x = event.x
     y = event.y
     color_pattern(canvas, x, y)
