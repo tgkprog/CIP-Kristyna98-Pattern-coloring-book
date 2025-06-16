@@ -1,13 +1,15 @@
 import tkinter as tk
+from tkinter import filedialog, messagebox
+from PIL import ImageGrab
 
 
-CANVAS_SIZE = 400
+CANVAS_SIZE = 470
 CANVAS_WIDTH = CANVAS_SIZE
 CANVAS_HEIGHT = CANVAS_SIZE
 
 
 root = tk.Tk()
-root.geometry('800x650')
+root.geometry('850x650')
 root.title("Coloring book")
 canvas = tk.Canvas(root, width = CANVAS_WIDTH + 2, height = CANVAS_HEIGHT + 2, bg ="white")
 canvas.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
@@ -71,9 +73,13 @@ def main():
     create_initial_instructions(canvas, 200 + 3, 200 + 3)
 
     #Buttons for reseting the pattern (i.e. it removes any coloring from the current pattern)
+    BOTTOM_BUTTON_Y = 568
     reset = tk.Button(root, text="Reset", width=5, command=lambda: reset_current_pattern())
-    reset.place(x=525, y=526)
+    reset.place(x=525, y=BOTTOM_BUTTON_Y)
 
+    save_button = tk.Button(root, text="Save", width=5, command=save_canvas_as_image)
+    save_button.place(x=600, y=BOTTOM_BUTTON_Y)    
+  
     #Buttons for color picking
     red = tk.Button(root, text="Red", width=5, bg="#e83838", command=lambda: return_color("#e83838"))
     red.place(x=20, y=40)
@@ -103,12 +109,13 @@ def main():
     white.place(x=20, y=520)
 
     # Buttons for line thickness picking
+    RIGHT_LINE = 675
     thick = tk.Button(root, text="Thick line", width=10, command=lambda: return_coloring_line_width(14))
-    thick.place(x=650, y=250)
-    medium = tk.Button(root, text="Medium-thick line", width=10, command=lambda: return_coloring_line_width(8))
-    medium.place(x=650, y=290)
+    thick.place(x=RIGHT_LINE, y=250)
+    medium = tk.Button(root, text="Medium-thick line", width=15, command=lambda: return_coloring_line_width(8))
+    medium.place(x=RIGHT_LINE, y=290)
     thin = tk.Button(root, text="Thin line", width=10, command=lambda: return_coloring_line_width(3))
-    thin.place(x=650, y=330)
+    thin.place(x=RIGHT_LINE, y=330)
 
     # Buttons for pattern picking
     pattern_flower = tk.Button(root, text="Patern 1 - Flower", width=15, command=lambda: draw_pattern(1))
@@ -117,6 +124,8 @@ def main():
     pattern_scenery.place(x=320, y=40)
     pattern_geometry = tk.Button(root, text="Patern 3 - Geometry",width=15, command=lambda: draw_pattern(3))
     pattern_geometry.place(x=490, y=40)
+    
+
 
 
 
@@ -228,7 +237,7 @@ def create_geometry_pattern(canvas, starting_x, starting_y):
 
 def create_initial_instructions(canvas, starting_x, starting_y):
     #This function writes the initial instructions to use the program. This function is called at the beginning. Here we don't change the global variable as this is it's pre-set value and the user cannot call this function any later after letting some pattenrs to be drawn on the canvas.
-
+    starting_x = starting_x + 23
     canvas.create_text(starting_x , starting_y - 180, text='WELCOME to the pattern coloring book!', font=('Arial, 17 bold'), fill='#7f65ad')
     canvas.create_text(starting_x, starting_y - 130, text="To start coloring please follow these steps:",font=('Arial, 16 '), fill='#7f65ad')
 
@@ -266,6 +275,23 @@ def on_mouse_dragged(event):
     x = event.x
     y = event.y
     color_pattern(canvas, x, y)
+
+def save_canvas_as_image():
+    if current_pattern == "initial_instructions":
+        messagebox.showinfo("Info", "Draw an image first")
+        return
+
+    file_path = filedialog.asksaveasfilename(
+        defaultextension=".png",
+        filetypes=[("PNG files", "*.png"), ("All files", "*.*")]
+    )
+
+    if file_path:
+        x = root.winfo_rootx() + canvas.winfo_x()
+        y = root.winfo_rooty() + canvas.winfo_y()
+        x1 = x + canvas.winfo_width()
+        y1 = y + canvas.winfo_height()
+        ImageGrab.grab().crop((x, y, x1, y1)).save(file_path)
 
 
 if __name__ == '__main__':
